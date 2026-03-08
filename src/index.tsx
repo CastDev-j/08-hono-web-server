@@ -1,22 +1,18 @@
 import { Hono } from "hono";
 import { renderer } from "./renderer";
-import { Layout, Content } from "./sources";
+import authors from "./api/authors";
+import books from "./api/books";
+import home from "./pages/home";
+import notFoundPage from "./pages/not-found";
 
 const app = new Hono();
 
 app.use(renderer);
 
-app.get("/", (c) => {
-  const props = {
-    title: "My Website",
-    description: "A simple website built with Hono",
-  };
+app.route("/", home);
+app.route("/authors", authors);
+app.route("/books", books);
 
-  return c.html(
-    <Layout {...props}>
-      <Content />
-    </Layout>,
-  );
-});
+app.notFound(notFoundPage);
 
 export default app;
