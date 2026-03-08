@@ -1,12 +1,22 @@
-import { Hono } from 'hono'
-import { renderer } from './renderer'
+import { Hono } from "hono";
+import { renderer } from "./renderer";
+import { Layout, Content } from "./sources";
 
-const app = new Hono()
+const app = new Hono();
 
-app.use(renderer)
+app.use(renderer);
 
-app.get('/', (c) => {
-  return c.render(<h1>Hello!</h1>)
-})
+app.get("/", (c) => {
+  const props = {
+    title: "My Website",
+    description: "A simple website built with Hono",
+  };
 
-export default app
+  return c.html(
+    <Layout {...props}>
+      <Content />
+    </Layout>,
+  );
+});
+
+export default app;
