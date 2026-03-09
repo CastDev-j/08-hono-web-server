@@ -1,17 +1,20 @@
 import { Hono } from "hono";
+import { renderer } from "./renderer";
 import authors from "./api/authors";
 import books from "./api/books";
 import home from "./pages/home";
+import env from "./api/env";
 import notFoundPage from "./pages/not-found";
-import { renderer } from "./renderer";
 
 const app = new Hono();
 app.use(renderer);
 
+app.route("/api/authors", authors);
+app.route("/api/books", books);
+app.route("/api/env", env);
+
 app.route("/", home);
-app.route("/authors", authors);
-app.route("/books", books);
+app.route("*", home);
 
 app.notFound(notFoundPage);
-
 export default app;
