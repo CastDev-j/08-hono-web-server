@@ -10,19 +10,15 @@ type Bindings = {
 
 const app = new Hono();
 
-app.get("/", async (c) => {
+app.get("/", (c) => {
   const environments = env<Bindings>(c);
 
-  console.log(environments);
-
-  return c.text(
-    `Environment Variables: 
-    - The current environment is ${environments.ENV}.
-    - Your name is ${environments.NAME}.
-    - The API URL is ${environments.API_URL}.
-    - The secret is ${environments.MI_API_SECRETA}.
-    `,
-  );
+  return c.json({
+    environment: environments.ENV,
+    name: environments.NAME,
+    apiUrl: environments.API_URL,
+    secret: environments.MI_API_SECRETA,
+  });
 });
 
 export default app;
