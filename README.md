@@ -1,21 +1,18 @@
+## Environment Variables in Cloudflare Workers with Hono
+
+```txt
+    copy `.template.vars.env ` and rename it to `.dev.vars` and add your environment variables in the format `KEY="VALUE"`.
+```
+
+## Running the project
+
 ```txt
 npm install
 npm run dev
 ```
 
+## Deploying to Cloudflare Workers
+
 ```txt
 npm run deploy
-```
-
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
-
-```txt
-npm run cf-typegen
-```
-
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
-
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
 ```
