@@ -4,39 +4,21 @@ const app = new Hono();
 
 app.get("/", (c) =>
   c.render(
-    <>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
-          <title>Vite App</title>
+    <section>
+      <h1>Hello Hono!</h1>
+      <p>
+        This web page is rendered using Hono's built-in renderer. I'm learning
+        how to work with Hono and it's pretty cool!
+      </p>
 
-          <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-            crossorigin="anonymous"
-          />
-
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-          />
-
-          <script type="module" src="/static/index.565d40eb.js"></script>
-        </head>
-        <body>
-          <div id="root"></div>
-        </body>
-      </html>
-    </>,
-    {
-      title: "Home Page",
-    },
+      <br />
+      <article className="">
+        <a href="/api/authors">Go Authors</a>
+        <a href="/api/books">Go Books</a>
+        <a href="/api/not-found">Go Not Found</a>
+      </article>
+    </section>,
+    { title: "Home Page" },
   ),
 );
 export default app;

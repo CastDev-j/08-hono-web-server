@@ -14,7 +14,6 @@ app.route("/api/books", books);
 app.route("/api/env", env);
 
 app.route("/", home);
-app.route("*", home);
 
 app.notFound(notFoundPage);
 export default app;
