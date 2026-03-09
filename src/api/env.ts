@@ -8,16 +8,33 @@ type Bindings = {
   MI_API_SECRETA: string;
 };
 
-const app = new Hono();
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.get("/", (c) => {
-  const environments = env<Bindings>(c);
+  const { ENV, NAME, API_URL, MI_API_SECRETA } = env(c);
+
+  const hasRequiredEnvVars = ENV && NAME && API_URL && MI_API_SECRETA;
+
+  if (!hasRequiredEnvVars) {
+    return c.json(
+      {
+        error: "Environment variables are not set properly.",
+        missing: {
+          ENV: !ENV,
+          NAME: !NAME,
+          API_URL: !API_URL,
+          MI_API_SECRETA: !MI_API_SECRETA,
+        },
+      },
+      500,
+    );
+  }
 
   return c.json({
-    environment: environments.ENV,
-    name: environments.NAME,
-    apiUrl: environments.API_URL,
-    secret: environments.MI_API_SECRETA,
+    environment: ENV,
+    name: NAME,
+    apiUrl: API_URL,
+    secret: MI_API_SECRETA,
   });
 });
 
