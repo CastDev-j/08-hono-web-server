@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { sValidator } from "@hono/standard-validator";
 import { todoService } from "../service/todo.service";
-import { todoSchemas } from "../schema/index.schema";
+import { todoSchemas } from "../schema/todo.schema";
 
 const app = new Hono();
 
