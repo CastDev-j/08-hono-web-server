@@ -26,6 +26,7 @@ Inside each module:
 - `api`: HTTP routes and request validation.
 - `service`: business logic.
 - `schema`: data validation schemas.
+- `interface`: TypeScript interfaces.
 - `*.page.tsx`: SSR pages when needed.
 
 ### Import Rules
@@ -40,6 +41,8 @@ Inside each module:
 - API files: `*.api.ts`
 - Services: `*.service.ts`.
 - SSR views: `*.page.tsx`.
+- Schemas: `*.schema.ts`.
+- interfaces: `*.interface.ts`.
 - Global shared files: `*.shared.ts` or `*.shared.tsx`.
 
 ### Pull Request Guidelines
