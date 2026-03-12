@@ -15,7 +15,7 @@ export const renderer = jsxRenderer(({ children, title }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title || "Hono Web Server"}</title>
         <ViteClient />
-        <Link href="/src/style.css" rel="stylesheet" />
+        <Link href="/style.css" rel="stylesheet" />
       </head>
       <body>{children}</body>
     </html>
