@@ -25,6 +25,7 @@ Inside each module:
 
 - `api`: HTTP routes and request validation.
 - `service`: business logic.
+- `schema`: data validation schemas.
 - `*.page.tsx`: SSR pages when needed.
 
 ### Import Rules
