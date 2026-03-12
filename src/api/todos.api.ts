@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { useTodos } from "../models/todos";
+import { useTodos } from "../controllers/todo.controller";
 
 const app = new Hono();
 
