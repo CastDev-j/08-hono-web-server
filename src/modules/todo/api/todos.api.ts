@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { useTodos } from "../controllers/todo.controller";
+import { todoService } from "../service/todo.service";
 
 const app = new Hono();
 
@@ -32,7 +32,7 @@ const updateTodoBodySchema = z.object({
   completed: z.boolean(),
 });
 
-const { addTodo, deleteTodo, getTodos, updateTodo } = useTodos();
+const { addTodo, deleteTodo, getTodos, updateTodo } = todoService();
 
 app.get("/", (c) => {
   const todos = getTodos();

@@ -10,7 +10,7 @@ const todos: Todo[] = [
   { id: 3, title: "Deploy to Cloudflare Workers", completed: false },
 ];
 
-export const useTodos = () => {
+export const todoService = () => {
   const getTodos = () => {
     return todos;
   };
