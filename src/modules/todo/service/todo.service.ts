@@ -29,10 +29,11 @@ export const todoService = () => {
     return newTodo;
   };
 
-  const updateTodo = (id: number, completed: boolean) => {
+  const updateTodo = ({ completed, id, title }: Partial<Todo>) => {
     const todo = todos.find((t) => t.id === id);
     if (todo) {
-      todo.completed = completed;
+      todo.completed = completed ?? todo.completed;
+      todo.title = title ?? todo.title;
       return todo;
     }
   };

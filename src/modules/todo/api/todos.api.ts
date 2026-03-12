@@ -1,38 +1,20 @@
 import { Hono } from "hono";
-import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
+import { sValidator } from "@hono/standard-validator";
 import { todoService } from "../service/todo.service";
+import { todoSchemas } from "../schema/index.schema";
 
 const app = new Hono();
 
-const validateTodoId = z
-  .string()
-  .refine(
-    (val) => {
-      const num = parseInt(val);
-      return !isNaN(num) && num > 0;
-    },
-    { message: "ID must be a positive number" },
-  )
-  .transform((val) => parseInt(val));
+const {
+  createTodoParamSchema,
+  deleteTodoParamSchema,
+  getTodoByIdParamSchema,
+  updateTodoBodySchema,
+  updateTodoParamSchema,
+} = todoSchemas;
 
-const createTodoSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-});
-
-const deleteTodoSchema = z.object({
-  id: validateTodoId,
-});
-
-const updateTodoSchema = z.object({
-  id: validateTodoId,
-});
-
-const updateTodoBodySchema = z.object({
-  completed: z.boolean(),
-});
-
-const { addTodo, deleteTodo, getTodos, updateTodo } = todoService();
+const { addTodo, deleteTodo, getTodos, updateTodo, getTodoById } =
+  todoService();
 
 app.get("/", (c) => {
   const todos = getTodos();
@@ -42,7 +24,7 @@ app.get("/", (c) => {
   });
 });
 
-app.post("/", zValidator("json", createTodoSchema), (c) => {
+app.post("/", sValidator("json", createTodoParamSchema), (c) => {
   const { title } = c.req.valid("json");
 
   const newTodo = addTodo(title);
@@ -53,7 +35,28 @@ app.post("/", zValidator("json", createTodoSchema), (c) => {
   });
 });
 
-app.delete("/:id", zValidator("param", deleteTodoSchema), (c) => {
+app.get("/:id", sValidator("param", getTodoByIdParamSchema), (c) => {
+  const { id } = c.req.valid("param");
+
+  const todo = getTodoById(id);
+
+  if (!todo) {
+    return c.json(
+      {
+        success: false,
+        message: `Todo with ID ${id} not found`,
+      },
+      404,
+    );
+  }
+
+  return c.json({
+    success: true,
+    todo,
+  });
+});
+
+app.delete("/:id", sValidator("param", deleteTodoParamSchema), (c) => {
   const { id } = c.req.valid("param");
   const deletedTodo = deleteTodo(id);
 
@@ -74,13 +77,13 @@ app.delete("/:id", zValidator("param", deleteTodoSchema), (c) => {
 
 app.put(
   "/:id",
-  zValidator("param", updateTodoSchema),
-  zValidator("json", updateTodoBodySchema),
+  sValidator("param", updateTodoParamSchema),
+  sValidator("json", updateTodoBodySchema),
   (c) => {
     const { id } = c.req.valid("param");
-    const { completed } = c.req.valid("json");
+    const { completed, title } = c.req.valid("json");
 
-    const updatedTodo = updateTodo(id, completed);
+    const updatedTodo = updateTodo({ id, completed, title });
 
     if (!updatedTodo) {
       return c.json(
