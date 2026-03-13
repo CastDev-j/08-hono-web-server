@@ -2,11 +2,18 @@
 
 copy `.template.vars.env ` and rename it to `.dev.vars` and add your environment variables in the format `KEY="VALUE"`.
 
+## Installing dependencies
+
+```txt
+bun install
+```
+
 ## Initializing the database
 
 ```txt
 
-bunx create-db
+bunx create-db // copy and paste the conection string to your .dev.vars file
+
 
 bunx --bun prisma migrate dev --name init
 
@@ -29,7 +36,6 @@ bunx --bun prisma studio
 ## Running the project
 
 ```txt
-bun install
 bun run dev
 ```
 
