@@ -1,9 +1,19 @@
 import { Todo } from "../interface/todo.interface";
 
 const todos: Todo[] = [
-  { id: 1, title: "Learn Hono", completed: false },
-  { id: 2, title: "Build a REST API", completed: false },
-  { id: 3, title: "Deploy to Cloudflare Workers", completed: false },
+  { id: "1", title: "Learn Hono", completed: false, createdAt: new Date() },
+  {
+    id: "2",
+    title: "Build a REST API",
+    completed: false,
+    createdAt: new Date(),
+  },
+  {
+    id: "3",
+    title: "Deploy to Cloudflare Workers",
+    completed: false,
+    createdAt: new Date(),
+  },
 ];
 
 export const todoService = () => {
@@ -14,7 +24,7 @@ export const todoService = () => {
     };
   };
 
-  const getTodoById = (id: number) => {
+  const getTodoById = (id: string) => {
     const todo = todos.find((t) => t.id === id);
     return {
       success: !!todo,
@@ -24,9 +34,10 @@ export const todoService = () => {
 
   const addTodo = (title: string) => {
     const newTodo: Todo = {
-      id: todos.length + 1,
+      id: (todos.length + 1).toString(),
       title,
       completed: false,
+      createdAt: new Date(),
     };
     todos.push(newTodo);
     return {
@@ -52,7 +63,7 @@ export const todoService = () => {
     };
   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = (id: string) => {
     const index = todos.findIndex((t) => t.id === id);
     if (index !== -1) {
       return {

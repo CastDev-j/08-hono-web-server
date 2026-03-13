@@ -2,16 +2,7 @@ import { z } from "zod";
 
 // Rehusable schemas
 
-const validateTodoId = z
-  .string()
-  .refine(
-    (val) => {
-      const num = parseInt(val);
-      return !isNaN(num) && num > 0;
-    },
-    { message: "ID must be a positive number" },
-  )
-  .transform((val) => parseInt(val));
+const validateTodoId = z.uuid();
 
 const validateTodoTitle = z
   .string()
