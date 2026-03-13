@@ -34,3 +34,5 @@ lerna-debug.log*
 .DS_Store
 
 /src/generated/prisma
+/prisma/migrations
+

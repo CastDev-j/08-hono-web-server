@@ -13,7 +13,7 @@ datasource db {
 }
 
 model Todo {
-  id        Int      @id
+  id        String   @id
   title     String
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
