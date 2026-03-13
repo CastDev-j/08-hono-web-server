@@ -1,81 +1,121 @@
+import { ContentfulStatusCode } from "hono/utils/http-status";
+import { PrismaClient } from "../../../generated/prisma/client";
 import { Todo } from "../interface/todo.interface";
 
-const todos: Todo[] = [
-  { id: "1", title: "Learn Hono", completed: false, createdAt: new Date() },
-  {
-    id: "2",
-    title: "Build a REST API",
-    completed: false,
-    createdAt: new Date(),
-  },
-  {
-    id: "3",
-    title: "Deploy to Cloudflare Workers",
-    completed: false,
-    createdAt: new Date(),
-  },
-];
+export const todoService = (prisma: PrismaClient) => {
+  const getTodos = async () => {
+    try {
+      const todos = await prisma.todo.findMany();
 
-export const todoService = () => {
-  const getTodos = () => {
-    return {
-      success: true,
-      data: todos,
-    };
+      return {
+        success: true,
+        data: todos,
+        code: 200 as ContentfulStatusCode,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
+        code: 500 as ContentfulStatusCode,
+      };
+    }
   };
 
-  const getTodoById = (id: string) => {
-    const todo = todos.find((t) => t.id === id);
-    return {
-      success: !!todo,
-      data: todo,
-    };
-  };
+  const getTodoById = async (id: string) => {
+    try {
+      const todo = await prisma.todo.findUnique({
+        where: { id },
+      });
 
-  const addTodo = (title: string) => {
-    const newTodo: Todo = {
-      id: (todos.length + 1).toString(),
-      title,
-      completed: false,
-      createdAt: new Date(),
-    };
-    todos.push(newTodo);
-    return {
-      success: true,
-      data: newTodo,
-    };
-  };
+      if (!todo) {
+        return {
+          success: false,
+          data: undefined,
+          code: 404 as ContentfulStatusCode,
+        };
+      }
 
-  const updateTodo = ({ completed, id, title }: Partial<Todo>) => {
-    const todo = todos.find((t) => t.id === id);
-    if (todo) {
-      todo.completed = completed ?? todo.completed;
-      todo.title = title ?? todo.title;
       return {
         success: true,
         data: todo,
+        code: 200 as ContentfulStatusCode,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
+        code: 500 as ContentfulStatusCode,
       };
     }
-
-    return {
-      success: false,
-      data: undefined,
-    };
   };
 
-  const deleteTodo = (id: string) => {
-    const index = todos.findIndex((t) => t.id === id);
-    if (index !== -1) {
+  const addTodo = async (title: string) => {
+    try {
+      const newTodo = await prisma.todo.create({
+        data: {
+          id: crypto.randomUUID(),
+          title,
+          completed: false,
+          createdAt: new Date(),
+        },
+      });
+
       return {
         success: true,
-        data: todos.splice(index, 1)[0],
+        data: newTodo,
+        code: 200 as ContentfulStatusCode,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
+        code: 500 as ContentfulStatusCode,
       };
     }
+  };
 
-    return {
-      success: false,
-      data: undefined,
-    };
+  const updateTodo = async ({ completed, id, title }: Partial<Todo>) => {
+    try {
+      const updatedTodo = await prisma.todo.update({
+        where: { id },
+        data: {
+          title,
+          completed,
+        },
+      });
+
+      return {
+        success: true,
+        data: updatedTodo,
+        code: 200 as ContentfulStatusCode,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
+        code: 500 as ContentfulStatusCode,
+      };
+    }
+  };
+
+  const deleteTodo = async (id: string) => {
+    try {
+      const deletedTodo = await prisma.todo.delete({
+        where: { id },
+      });
+
+      return {
+        success: true,
+        data: deletedTodo,
+        code: 200 as ContentfulStatusCode,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
+        code: 500 as ContentfulStatusCode,
+      };
+    }
   };
 
   return {

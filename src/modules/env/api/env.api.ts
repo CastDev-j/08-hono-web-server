@@ -1,14 +1,20 @@
 import { Hono } from "hono";
 import { env } from "hono/adapter";
+import { PrismaClient } from "../../../generated/prisma/client";
 
-type Bindings = {
-  NAME: string;
-  ENV: string;
-  API_URL: string;
-  MI_API_SECRETA: string;
+type ContextWithPrisma = {
+  Variables: {
+    prisma: PrismaClient;
+  };
+  Bindings: {
+    NAME: string;
+    ENV: string;
+    API_URL: string;
+    MI_API_SECRETA: string;
+  };
 };
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<ContextWithPrisma>();
 
 app.get("/", (c) => {
   const { ENV, NAME, API_URL, MI_API_SECRETA } = env(c);

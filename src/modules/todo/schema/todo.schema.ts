@@ -27,10 +27,14 @@ const updateTodoParamSchema = z.object({
   id: validateTodoId,
 });
 
-const updateTodoBodySchema = z.object({
-  title: validateTodoTitle.optional(),
-  completed: z.boolean(),
-});
+const updateTodoBodySchema = z
+  .object({
+    title: validateTodoTitle.optional(),
+    completed: z.boolean().optional(),
+  })
+  .refine((data) => data.title !== undefined || data.completed !== undefined, {
+    message: "At least one field (title or completed) must be provided",
+  });
 
 export const todoSchemas = {
   getTodoByIdParamSchema,
