@@ -17,30 +17,51 @@ const { addTodo, deleteTodo, getTodos, updateTodo, getTodoById } =
   todoService();
 
 app.get("/", (c) => {
-  const todos = getTodos();
+  const { success, data } = getTodos();
+
+  if (!success) {
+    return c.json(
+      {
+        success: false,
+        message: "Failed to retrieve todos",
+      },
+      500,
+    );
+  }
+
   return c.json({
     success: true,
-    todos,
+    todos: data,
   });
 });
 
 app.post("/", sValidator("json", createTodoParamSchema), (c) => {
   const { title } = c.req.valid("json");
 
-  const newTodo = addTodo(title);
+  const { success, data } = addTodo(title);
+
+  if (!success) {
+    return c.json(
+      {
+        success: false,
+        message: "Failed to add todo",
+      },
+      500,
+    );
+  }
 
   return c.json({
     success: true,
-    newTodo,
+    newTodo: data,
   });
 });
 
 app.get("/:id", sValidator("param", getTodoByIdParamSchema), (c) => {
   const { id } = c.req.valid("param");
 
-  const todo = getTodoById(id);
+  const { success, data } = getTodoById(id);
 
-  if (!todo) {
+  if (!success) {
     return c.json(
       {
         success: false,
@@ -52,15 +73,15 @@ app.get("/:id", sValidator("param", getTodoByIdParamSchema), (c) => {
 
   return c.json({
     success: true,
-    todo,
+    todo: data,
   });
 });
 
 app.delete("/:id", sValidator("param", deleteTodoParamSchema), (c) => {
   const { id } = c.req.valid("param");
-  const deletedTodo = deleteTodo(id);
+  const { success, data } = deleteTodo(id);
 
-  if (!deletedTodo) {
+  if (!success) {
     return c.json(
       {
         success: false,
@@ -83,9 +104,9 @@ app.put(
     const { id } = c.req.valid("param");
     const { completed, title } = c.req.valid("json");
 
-    const updatedTodo = updateTodo({ id, completed, title });
+    const { success, data } = updateTodo({ id, completed, title });
 
-    if (!updatedTodo) {
+    if (!success) {
       return c.json(
         {
           success: false,
@@ -97,7 +118,7 @@ app.put(
 
     return c.json({
       success: true,
-      updatedTodo,
+      updatedTodo: data,
     });
   },
 );

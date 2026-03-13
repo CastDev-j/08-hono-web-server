@@ -8,11 +8,18 @@ const todos: Todo[] = [
 
 export const todoService = () => {
   const getTodos = () => {
-    return todos;
+    return {
+      success: true,
+      data: todos,
+    };
   };
 
   const getTodoById = (id: number) => {
-    return todos.find((t) => t.id === id);
+    const todo = todos.find((t) => t.id === id);
+    return {
+      success: !!todo,
+      data: todo,
+    };
   };
 
   const addTodo = (title: string) => {
@@ -22,7 +29,10 @@ export const todoService = () => {
       completed: false,
     };
     todos.push(newTodo);
-    return newTodo;
+    return {
+      success: true,
+      data: newTodo,
+    };
   };
 
   const updateTodo = ({ completed, id, title }: Partial<Todo>) => {
@@ -30,15 +40,31 @@ export const todoService = () => {
     if (todo) {
       todo.completed = completed ?? todo.completed;
       todo.title = title ?? todo.title;
-      return todo;
+      return {
+        success: true,
+        data: todo,
+      };
     }
+
+    return {
+      success: false,
+      data: undefined,
+    };
   };
 
   const deleteTodo = (id: number) => {
     const index = todos.findIndex((t) => t.id === id);
     if (index !== -1) {
-      return todos.splice(index, 1)[0];
+      return {
+        success: true,
+        data: todos.splice(index, 1)[0],
+      };
     }
+
+    return {
+      success: false,
+      data: undefined,
+    };
   };
 
   return {
